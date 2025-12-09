@@ -1,0 +1,103 @@
+fileName: PRD.txt
+except: {{#compareName name}}{{/compareName}}
+---
+Please implement DDD-based microservice architecture code for an event storming model-based domain using Spring Boot and DDD Extension. The code must be implemented strictly based on the metadata provided below and @generation-rules:
+
+{{namePascalCase}} DDD Model:
+{{{contexts.json}}}
+
+<function>
+window.$HandleBars.registerHelper('compareName', function (name, options) {
+    if(name == 'ui'){
+        return true;
+    }
+});
+
+var cache = []
+const includingKeys = ["", "_type", "fieldDescriptors", "className", "displayName", "events", "aggregateRoot", "aggregates", "policies", "incomingRelations", "source", "commands", "readModels", "queryOption", "queryParameters", "actors", "name", "examples", "given", "when", "then", "value", "type", "controllerInfo", "isRestRepository", "restRepositoryInfo", "apiPath", "method", "fullApiPath", "lifeCycles", "trigger", "annotataion", "entities", "relations", "targetElement", "items","portGenerated"]
+
+function customStringify(obj, cache = new Set(), parentType = null, parentKey = null, path = []) {
+    if (obj === null || typeof obj !== 'object') {
+        return JSON.stringify(obj);
+    }
+
+    // 빈 배열인 경우만 필터링
+    if (Array.isArray(obj) && obj.length === 0) {
+        return null;
+    }
+
+    if (cache.has(obj)) {
+        return '{}'; // 순환 참조 처리
+    }
+
+    cache.add(obj);
+    
+    // 현재 경로 업데이트
+    const currentPath = [...path];
+    if (parentKey) currentPath.push(parentKey);
+
+    if (Array.isArray(obj)) {
+        const items = obj.map(item => customStringify(item, cache, parentType, parentKey, currentPath))
+                        .filter(item => item !== null);
+        cache.delete(obj);
+        
+        if (items.length === 0) {
+            return null;
+        }
+        
+        return `[${items.join(',')}]`;
+    }
+
+    const pairs = [];
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            // given, when, then 하위에서만 value 키 포함
+            const isInExampleSection = currentPath.includes('given') || currentPath.includes('when') || currentPath.includes('then');
+            const isValueField = parentKey === 'value' || currentPath.includes('value');
+            
+            // value 키를 처리하는 조건 - given, when, then 하위에서만 value 키 처리
+            if (key === 'value' && !isInExampleSection) {
+                continue;
+            }
+            
+            // 일반 키 필터링
+            if (!isValueField && isNaN(key) && !includingKeys.includes(key)) continue;
+
+            let value = obj[key];
+            if (value === null) continue;
+            
+            // 특정 조건의 필터링 로직 유지
+            if (!isValueField) {
+                if (key === 'incomingRelations' && !currentPath.includes('policies')) {
+                    continue;
+                }
+                
+                if (key === 'relations' && currentPath.includes('entities') && currentPath.includes('relations')) {
+                    continue;
+                }
+                
+                if (key === 'fieldDescriptors' && currentPath.includes('source')) {
+                    continue;
+                }
+            }
+
+            if (key === "_type" && typeof value === 'string' && value.indexOf('.') > 1) {
+                value = value.split(".").pop();
+            }
+
+            // 재귀적으로 객체 처리
+            const stringifiedValue = customStringify(value, cache, obj.type || parentType, key, currentPath);
+            
+            if (stringifiedValue === null) continue;
+            pairs.push(`"${key}":${stringifiedValue}`);
+        }
+    }
+
+    cache.delete(obj);
+    return pairs.length > 0 ? `{${pairs.join(',')}}` : null;
+}
+
+// customStringify 함수 적용
+this.contexts.json = customStringify(this);
+
+</function>

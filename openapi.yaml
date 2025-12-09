@@ -1,0 +1,320 @@
+forEach: BoundedContext
+fileName: openapi.yaml
+path: {{name}}
+except: {{#checkFE name}}{{/checkFE}}
+---
+
+openapi: 3.1.0
+info:
+  title: {{options.package}} API
+  version: 0.0.1
+  description: API definition of {{options.package}}
+  contact:
+    name: creator's name
+    url: http://creator.homepage.address
+    email: creator@creator.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+paths:
+{{#if aggregates}}
+{{#aggregates}}
+  /{{namePlural}}:
+    summary: Global operations on {{namePlural}}
+    get:
+      tags:
+      - {{namePlural}}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/{{namePascalCase}}'
+              examples:
+                value:
+          description: Get list of {{namePlural}}
+      operationId: Get{{namePascalCase}}
+      summary: Get list of {{namePlural}}
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{namePascalCase}}'
+            {{#if commands.examples}}
+            {{#commands.examples}}
+            examples:
+            {{#when}}
+              value:
+                {{#each value}}
+                  {{@key}}: {{this}}
+                {{/each}}
+            {{/when}}
+            {{/commands.examples}}
+            {{/if}}
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{namePascalCase}}'
+              {{#if commands.examples}}
+              {{#commands.examples}}
+              examples:
+              {{#then}}
+                value:
+                  {{#each value}}
+                    {{@key}}: {{this}}
+                  {{/each}}
+              {{/then}}
+              {{/commands.examples}}
+              {{/if}}
+          description: Changed {{namePascalCase}}
+      operationId: Post {{namePascalCase}}
+      summary: Post {{namePascalCase}}        
+  /{{namePlural}}/{id}:
+    summary: Specific operation on {{namePlural}}
+    get:
+      parameters:
+      - examples:
+          {{aggregateRoot.keyFieldDescriptor.className}}:
+            value: {{aggregateRoot.keyFieldDescriptor.className}}
+        name: id
+        description: {{namePascalCase}} name
+        schema:
+          type: {{aggregateRoot.keyFieldDescriptor.className}}
+        in: path
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{namePascalCase}}'
+              examples:
+                value:
+                  {{#aggregateRoot.fieldDescriptors}}
+                    {{name}}: {{map @root.contexts.examples className}}
+                  {{/aggregateRoot.fieldDescriptors}}
+          description: {{namePlural}} with specified id
+      operationId: Get{{namePascalCase}}ById
+      summary: Get {{namePascalCase}} by id
+      description: Get {{namePascalCase}} by id
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{namePascalCase}}'
+            {{#if commands.examples}}
+            {{#commands.examples}}
+            examples:
+            {{#when}}
+              1:
+                value:
+                {{#each value}}
+                  {{@key}}: {{this}}
+                {{/each}}
+            {{/when}}
+            {{/commands.examples}}
+            {{/if}}
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{namePascalCase}}'
+              {{#if commands.examples}}
+              {{#commands.examples}}
+              examples:
+              {{#then}}
+                1:
+                  value:
+                  {{#each value}}
+                    {{@key}}: {{this}}
+                  {{/each}}
+              {{/then}}
+              {{/commands.examples}}
+              {{/if}}
+          description: Changed {{namePascalCase}}
+      operationId: Patch{{namePascalCase}}
+      summary: Patch existing {{namePascalCase}}
+    parameters:
+    - name: id
+      description: {{namePascalCase}} id
+      schema:
+        type: {{map @root.contexts.mappings aggregateRoot.keyFieldDescriptor.className}}
+      in: path
+      required: true
+    {{#if commands}}
+    {{#commands}}
+    {{#if isRestRepository}}
+    {{else}}
+  /{{#aggregate}}{{namePlural}}{{/aggregate}}/{id}{{#checkMethod controllerInfo}}{{/checkMethod}}:
+    summary: {{name}} operation on {{#aggregate}}{{namePlural}}{{/aggregate}}
+    {{controllerInfo.method}}:
+      requestBody:
+        content:
+          application/json:
+            schema:      # Request body contents
+              type: object
+              properties:
+              {{#fieldDescriptors}}
+                {{name}}:
+                  description: {{name}} of this {{../namePascalCase}}
+                  type: {{#changeType className}}{{/changeType}}
+              {{/fieldDescriptors}}
+            {{#if examples}}
+            examples:
+            {{#examples}}
+              Example {{@index}}:   
+              {{#when}}
+                value:
+                {{#each value}}
+                  {{@key}}: {{this}}
+                {{/each}}
+              {{/when}}
+            {{/examples}}      
+            {{/if}}
+      parameters:
+      - name: id
+        description: {{namePascalCase}} name
+        schema:
+          type: {{#changeType aggregate.aggregateRoot.keyFieldDescriptor.className}}{{/changeType}}
+        in: path
+        required: true
+        examples:
+        {{#if examples}}
+          {{#examples}}
+          Example {{@index}}:   
+            {{#when}}
+            value:
+              {{#each value}}
+              {{@key}}: {{this}}
+            {{/each}}
+          {{/when}}
+        {{/examples}}
+        {{/if}}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{aggregate.namePascalCase}}'
+              examples:
+              {{#if examples}}
+              {{#examples}}
+                Example {{@index}}: 
+              {{#then}}
+                  value:
+                  {{#each value}}
+                    {{@key}}: {{this}}
+                  {{/each}}
+              {{/then}}
+              {{/examples}}
+              {{/if}}
+          description: {{namePascalCase}} Operation
+      operationId: {{namePascalCase}}
+      summary: {{namePascalCase}}
+      description: {{namePascalCase}}
+      {{/if}}
+      {{/commands}}
+      {{/if}}
+{{/aggregates}}
+{{/if}}
+{{#if aggregates}}
+{{#aggregates}}
+components:
+  schemas:
+    {{namePascalCase}}:
+      title: Root Type for {{namePascalCase}}
+      description: The root of the {{namePascalCase}} type's schema.
+      type: object
+      properties:
+      {{#aggregateRoot.fieldDescriptors}}
+        {{name}}:
+          description: {{name}} of this {{../namePascalCase}}
+          type: {{map @root.contexts.mappings className}}
+      {{/aggregateRoot.fieldDescriptors}}
+      example:
+      {{#aggregateRoot.fieldDescriptors}}
+        {{name}}: {{map @root.contexts.examples className}}
+      {{/aggregateRoot.fieldDescriptors}}
+tags:
+- name: {{namePascalCase}}
+  description: {{namePascalCase}} resource
+{{/aggregates}}
+{{/if}}
+
+<function>
+
+  window.$HandleBars.registerHelper('checkMethod', function (command) {
+    if(command.method == 'POST'){
+      return command.apiPath;
+    }else{
+      return '/' + command.apiPath;
+    }
+  })
+
+  window.$HandleBars.registerHelper('checkFE', function (name) {
+    if(name == 'ui' || name == 'frontend' || name == 'UI' || name == 'Frontend'){
+      return true;
+    }else{
+      return false;
+    }
+  })
+
+  window.$HandleBars.registerHelper('changeType', function (type) {
+    if (type === 'Double' || type === 'double' || type === 'BigDecimal' || type === 'float') {
+      return 'number';
+    }
+    if (type === 'Integer' || type === 'integer' || type === 'Long' || type === 'long') {
+      return 'integer';
+    }
+    if (type === 'String') {
+      return 'string';
+    }
+    return 'string';
+  })
+ 
+    this.contexts.mappings = [
+      {
+        "if":['Double', 'double', 'BigDecimal', 'float'],
+        "then":'number'
+      },
+      {
+        "if":['Integer', 'integer', 'Long', 'long'],
+        "then": 'integer'
+      },
+      {
+        "if":['String'],
+        "then": 'string'
+      },
+      {
+        "default": 'string'
+      }
+    ]
+
+    this.contexts.examples = [
+      {
+        "if":['Double', 'double', 'BigDecimal', 'float'],
+        "then":1.1
+      },
+      {
+        "if":['Integer', 'integer', 'Long', 'long'],
+        "then": 1
+      },
+      {
+        "if":['String'],
+        "then": 'A string'
+      },
+      {
+        "default": 'value'
+      }
+    ]
+
+</function>

@@ -1,1 +1,0 @@
-# topping-vibe-coding-erp-frontend-claude-code

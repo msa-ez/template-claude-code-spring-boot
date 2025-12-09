@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(mvn clean install:*)",
+      "Bash(mvn clean test:*)",
+      "Bash(mvn test:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(split:*)",
+      "Bash(wc:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
