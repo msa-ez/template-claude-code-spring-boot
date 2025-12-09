@@ -48,7 +48,7 @@
     1) Full Window Layout
         - Container: Width and height must be fully filled when opened in browser (no vh, vw 100 processing)
         - Box: `sx=\{{ display: 'flex', minHeight: '100vh' }}` for flex layout
-        - No padding: Remove default margin with `sx={{ m: 0, p: 0 }}`
+        - No padding: Remove default margin with `sx=\{{ m: 0, p: 0 }}`
 
     2) Main Page Structure
         ```typescript
