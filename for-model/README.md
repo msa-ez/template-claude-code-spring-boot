@@ -1,13 +1,36 @@
-To build an ERP System with modular backend configuration and single Frontend configuration, execute Vibe Coding in the following order:
+# Spring Boot Backend MSA Template
 
-1. PRD.txt
-- Backend configuration and Gateway, Kafka setup through PRD.txt for each module
+## File Structure
 
-2. frontend-setup-prd.txt
-- Single Frontend configuration and React-based application setup through frontend-setup-prd.txt
+```
+.claude/
+└── skills/
+    └── spring-boot-backend-msa/
+        ├── SKILL.md                        # Backend code generation guidelines (main entry point)
+        └── references/
+            ├── generation.md               # Basic rules and procedures for code generation (highest priority)
+            ├── domain-events.md            # Domain event publishing and handling rules
+            ├── eventstorming.md            # Event Storming-based design rules
+            ├── fixed-generation.md         # Fixed pattern code generation rules
+            ├── package-structure.md        # Backend project package structure
+            ├── technical-stack.md          # Backend technology stack and framework guide
+            └── test-generation.md          # Backend test code generation rules
+--
+PRD.txt                                     # Project requirements definition template
+```
 
-3. Frontend-PRD.txt
-- Component creation through Frontend-PRD.txt for each module
+## Usage
 
-4. erp-component-prd.txt
-- ERP Component creation and integration through erp-component-prd.txt
+### 1. Open Terminal
+Open a terminal in your working directory.
+
+### 2. Set Node Version (Node 20+)
+```bash
+nvm use 22
+```
+
+### 3. Run Claude Code Command
+Execute Claude Code in your IDE.
+
+### 4. Add PRD File to Prompt
+Add `@PRD.txt` to the prompt area and execute.

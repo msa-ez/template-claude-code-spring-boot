@@ -64,6 +64,7 @@ Generate the following files according to the structure and file descriptions ba
 
 ---
 
+
 ## Package Descriptions
 
 ### Application Root (`/[ServiceName]Application.java`)
@@ -111,6 +112,7 @@ Adapters for external systems:
 
 ---
 
+
 ## Architecture Layers
 
 ### 1. Domain Layer (`/domain`)
@@ -130,6 +132,7 @@ Adapters for external systems:
 - Application settings
 
 ---
+
 
 ## Key Principles
 

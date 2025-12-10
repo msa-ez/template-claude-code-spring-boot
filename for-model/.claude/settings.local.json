@@ -12,7 +12,13 @@
       "Bash(head:*)",
       "Bash(tail:*)",
       "Bash(split:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Skill(react-frontend)",
+      "Bash(echo:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm create:*)"
     ],
     "deny": [],
     "ask": []

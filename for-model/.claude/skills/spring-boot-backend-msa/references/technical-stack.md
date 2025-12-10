@@ -11,6 +11,7 @@ When generating code, strictly adhere to the following frameworks, technologies,
 
 ---
 
+
 ## Core Frameworks
 
 1. **Application Framework**: Spring Boot 2.3.1.RELEASE
@@ -18,6 +19,7 @@ When generating code, strictly adhere to the following frameworks, technologies,
 3. **Package Namespace**: Use Javax packages (javax.persistence.*, javax.transaction.*, etc.)
 
 ---
+
 
 ## Main Technologies
 
@@ -54,6 +56,7 @@ When generating code, strictly adhere to the following frameworks, technologies,
 
 ---
 
+
 ## Test Methodology
 
 Refer to `@test-code-generation-rules` for detailed test implementation specifications.
@@ -66,6 +69,7 @@ Refer to `@test-code-generation-rules` for detailed test implementation specific
 
 ---
 
+
 ## Messaging and Event Processing
 
 Refer to `@domain-event-publishing-rules` for messaging and event processing configuration.
@@ -76,6 +80,7 @@ Refer to `@domain-event-publishing-rules` for messaging and event processing con
 - `spring-cloud-stream-dependencies` (Germantown.SR1)
 
 ---
+
 
 ## Architecture Patterns and Design Methodologies
 
@@ -113,10 +118,20 @@ Refer to `@domain-event-publishing-rules` for messaging and event processing con
 
 ---
 
+
 ## Key Technologies Summary
 
 | Category | Technology | Version |
-|----------|-----------|---------|
+|---
+---
+---
+-|---
+---
+---
+--|---
+---
+---
+|
 | Framework | Spring Boot | 2.3.1.RELEASE |
 | Language | Java | 11 |
 | Data Access | Spring Data JPA | - |
@@ -130,6 +145,7 @@ Refer to `@domain-event-publishing-rules` for messaging and event processing con
 | Orchestration | Kubernetes | - |
 
 ---
+
 
 ## Maven Dependencies (pom.xml)
 
@@ -177,6 +193,7 @@ Key dependencies required:
 ```
 
 ---
+
 
 ## Development Principles
 

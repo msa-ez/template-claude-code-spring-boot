@@ -19,6 +19,7 @@ server:
   port: 8084
 
 ---
+
 spring:
   profiles: default
   jpa:
@@ -55,6 +56,7 @@ logging:
     org.springframework.cloud: debug
 
 ---
+
 spring:
   profiles: docker
   jpa:
@@ -178,6 +180,7 @@ server:
   port: 8088
 
 ---
+
 spring:
   profiles: default
   cloud:
@@ -209,6 +212,7 @@ spring:
             allowCredentials: true
 
 ---
+
 spring:
   profiles: docker
   cloud:

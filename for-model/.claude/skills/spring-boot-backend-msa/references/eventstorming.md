@@ -12,6 +12,7 @@ Use this skill when:
 
 ---
 
+
 ## Event
 
 ### 1. Reference Metadata
@@ -27,6 +28,7 @@ Events use metadata under 'events' to publish events when business logic process
   - Declare default constructor
 
 ---
+
 
 ## Command
 
@@ -50,6 +52,7 @@ Commands use metadata under 'commands', and isRestRepository determines whether 
 
 ---
 
+
 ## Policy
 
 ### 1. Reference Metadata and Role
@@ -69,6 +72,7 @@ Declare port methods within the Aggregate Root Entity with Policy name, passing 
   - If policies do not exist, generate PolicyHandler.java with default configuration
 
 ---
+
 
 ## Aggregate
 
@@ -92,6 +96,7 @@ Aggregates should be generated based on metadata in the 'aggregates' section, us
   - Write queries referring to queryOption if parameters of views or ReadModels exist
 
 ---
+
 
 ## Generation Workflow
 

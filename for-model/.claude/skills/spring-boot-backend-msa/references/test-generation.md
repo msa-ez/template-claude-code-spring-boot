@@ -12,11 +12,13 @@ When generating test code for the project, it must be generated based on the con
 
 ---
 
+
 ## Reference Metadata
 
 When writing test code, it must be based on given, when, then data under examples data in Metadata.
 
 ---
+
 
 ## Test Code Components
 
@@ -30,6 +32,7 @@ When writing test code, it must be based on given, when, then data under example
 5. **Once test file configuration is complete, immediately execute tests and repeat execution - testing until final test passes by fixing errors**
 
 ---
+
 
 ## Examples
 
@@ -107,6 +110,7 @@ public void test0() {
 
 ---
 
+
 ## Successful Test Completion
 
 The following shows an example of successful test completion:
@@ -124,6 +128,7 @@ The following shows an example of successful test completion:
 
 ---
 
+
 ## Test Rules
 
 1. **A test is considered to have passed only when the completion log is output as shown above during test execution. Any Build Fail errors must be fixed.**
@@ -131,6 +136,7 @@ The following shows an example of successful test completion:
 2. **When repeating the test-fix cycle, the '-DskipTests' option should absolutely not be used, and iterative testing and error fixing must proceed until the final test is successfully completed.**
 
 ---
+
 
 ## Test Structure
 
@@ -197,6 +203,7 @@ assertEquals(expectedValue, result.getField());
 
 ---
 
+
 ## Best Practices
 
 1. **Test One Thing**: Each test should verify a single behavior
@@ -209,6 +216,7 @@ assertEquals(expectedValue, result.getField());
 8. **Test Edge Cases**: Include tests for error conditions and boundary values
 
 ---
+
 
 ## Common Test Scenarios
 
@@ -268,6 +276,7 @@ public void testPolicyExecution() {
 ```
 
 ---
+
 
 ## Continuous Testing
 

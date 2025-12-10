@@ -1,7 +1,7 @@
 name: Claude Code MSA Backend Spring Boot
 rating: 5
 imageUrl: https://github.com/user-attachments/assets/7753ec29-b7dc-40ae-8582-d68221c56d43
-description: Implement ERP System based on clean code through Vibe Coding
+description: Spring Boot code generation through Claude Code-based Vibe Coding
 depends:
 tags:
   - Spring Boot
