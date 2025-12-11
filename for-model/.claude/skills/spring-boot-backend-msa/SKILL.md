@@ -1,22 +1,18 @@
 ---
-
 name: Backend Generation Guide
 description: Integrated guidelines for Spring Boot-based MSA backend code generation
 ---
-
 
 # Backend Project Generation Guideline
 ## Instructions
 This document provides skill sets and guidelines to apply when processing backend code generation requests based on PRD files.
 
 ## Request Type Identification
-
 When receiving a code generation request, first check if it is a **PRD** request.
 
 ## Skill Application Rules
 
 ### PRD Requests (Backend)
-
 Use all skills in the `.claude/skills/spring-boot-backend-msa` directory for backend code generation.
 
 #### Mandatory Priority: Read generation first
@@ -24,7 +20,6 @@ Before starting any code generation work, you must **read the following file fir
 - @.claude/skills/spring-boot-backend-msa/references/generation.md
 
 #### Backend References to Apply
-
 1. **Generation Reference** (Highest Priority)
    - Description: Basic rules and procedures for backend code generation
    - Path: @.claude/skills/spring-boot-backend-msa/references/generation.md

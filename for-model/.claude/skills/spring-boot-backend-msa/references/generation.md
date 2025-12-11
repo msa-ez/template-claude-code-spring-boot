@@ -1,145 +1,139 @@
 # Backend Project Generation Rules
-## Instructions
 
-Use this skill when:
-- Generating complete backend microservice code from metadata
-- Creating DDD-based Spring Boot project structure
-- Implementing Kafka-based event-driven microservices
-- Ensuring all required components are generated in systematic order
-- Building complete projects including Gateway and infrastructure setup
-- Generating and executing test code for complete project construction
+### Precautions
+- All component generation must be based on metadata and must be generated without omissions. However, you must not arbitrarily create components by referencing non-existent metadata.
+- Do not fall into error correction loops until all files are generated.
 
-Follow these requirements when generating projects:
+### Step-by-Step Component Generation Process
+Projects must be created strictly following the numbered order below.
 
-## Project Generation Order
+#### 1. Metadata Analysis, Validation and Package Structure Creation
+- Analyze Aggregate (aggregates), Command (commands), Event (events), Policy metadata
+- Refer to the "3. Project Structure" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md` to correct missing package structure
 
-Projects must be generated in the following order according to the prompt:
+#### 2. Kafka Infrastructure Setup (Required Prerequisite)
+- Generate by referring to the Kafka part of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
 
-Package structure creation → Domain and infra files generation → pom.xml generation → Application.java and application.yml generation → Fixed files generation (Dockerfile, Manifests, gateway, kafka) → Test code generation → Test & Execution (mandatory)
+#### 3. Gateway Setup
+- If there's no gateway directory at root, generate by referring to the Gateway part of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- If it already exists, add routes to application.yml
 
-## Essential Rules
+#### 4. Kafka Configuration Component Generation
+- Refer to "1. KafkaProcessor Interface Definition" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- Generate `config/kafka/KafkaProcessor.java`
 
-All files must be generated according to requirements before error correction. Do not fall into error correction loops during file generation.
+#### 5. Common Infrastructure Component Generation
+- Refer to "2. AbstractEvent Class Implementation" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- Generate `infra/AbstractEvent.java` (includes publish(), publishAfterCommit() methods)
 
-## Project Generation Requirements
+#### 6. Domain Component Generation
+**Required**: All Aggregates in the metadata must be generated without omission.
+**Generation Order (Considering Dependencies):**
 
-### Basic Principles
+##### 6.1 Repository Interface Generation
+- Refer to "3.2 Layer-wise Roles and Responsibilities > Domain Layer" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md`
+- File location: `domain/[Aggregate]Repository.java`
+- Extend JpaRepository<[Aggregate], Long>
 
-1. **Metadata-Based Generation**: All files are generated based on metadata and must not be generated with data not included in metadata.
+##### 6.2 Domain Event Class Generation
+- Refer to "3. Domain Event Class Implementation" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- File location: `domain/[Event].java`
+- Extend AbstractEvent, copy fields through BeanUtils.copyProperties
 
-2. **No Reference to Existing Root Files**: When generating projects, do not reference existing files in Root, and package structure follows metadata definitions.
+##### 6.3 Aggregate Root Entity Generation
+- Refer to "4. Event Publishing from Aggregate Root" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- File location: `domain/[Aggregate].java`
+- **Annotations**: @Entity, @Table, @Data
+- **Event Publishing**: Call publishAfterCommit() in @PostPersist/@PostUpdate hooks
+- **Static Repository Method**: Implement static repository() method
 
-3. **Rule Compliance**: Strictly adhere to @package-structure/SKILL.md, @technical-stack/SKILL.md, @domain-events/SKILL.md.
+##### 6.4 Value Object Generation (if exists)
+- Refer to "3.2 Layer-wise Roles and Responsibilities > Domain Layer" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md`
+- File location: `domain/[ValueObject].java`
+- Use @Embeddable annotation
 
-### Kafka Infrastructure Setup (Mandatory Prerequisite)
+**Key Points:**
+- Strictly adhere to generation order to satisfy dependencies: Repository → Events → Aggregate Root → Value Objects
+- All JPA entities must have appropriate annotations
+- Event publishing must use publishAfterCommit() for transactional safety
 
-**Important**: Check and create Kafka infrastructure before generating any service
+#### 7. Infrastructure Adapter Component Generation
 
-- If kafka/docker-compose.yml does not exist in Root, create it
-  - Zookeeper (port 2181, image: confluentinc/cp-zookeeper:7.9.1)
-  - Kafka (port 9092, image: confluentinc/cp-kafka:7.9.1)
-- If it already exists, reuse it
+##### 7.1 PolicyHandler Generation (if policies exist)
+- Refer to "5. PolicyHandler Implementation" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- File location: `infra/PolicyHandler.java`
+- **Condition**: Generate only when policy metadata exists
+- Filter by event type using @StreamListener + condition header
+- Number of EventNames in metadata = Number of @StreamListener methods (must match)
 
-### Gateway Setup
+##### 7.2 REST Controller Generation (optional)
+- Refer to "3.2 Layer-wise Roles and Responsibilities > Infrastructure Layer" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md`
+- File location: `infra/[Aggregate]Controller.java`
+- Custom endpoints complementing Spring Data REST
 
-- If gateway directory does not exist in Root, create it according to @fixed-generation-rules
-- If it already exists, add new service routes to gateway/src/main/resources/application.yml
+##### 7.3 HATEOAS Processor Generation (optional)
+- Refer to "3.2 Layer-wise Roles and Responsibilities > Infrastructure Layer" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md`
+- File location: `infra/[Aggregate]HateoasProcessor.java`
+- Add custom HATEOAS links by implementing ResourceProcessor
 
-### Detailed File Generation Order
+#### 8. Application Class Generation
+- Refer to "7. Spring Boot Application Class" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- File location: `[ServiceName]Application.java`
+- **Required Annotations**: @SpringBootApplication, @EnableBinding(KafkaProcessor.class)
+- **Static ApplicationContext**: Required for Bean access from AbstractEvent
 
-#### Step 1: Package Structure Creation
+#### 9. Configuration File Generation
 
-```
-/[service]
-  /src/main/java/[projectname]
-    /config/kafka
-    /domain
-    /infra
-  /src/main/resources
-  /kubernetes
-```
+##### 9.1 Application Configuration
+- Refer to "6. application.yml Configuration" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
+- Refer to application.yml example in `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- File location: `resources/application.yml`
+- **Required Configuration**: server.port (unique), spring.application.name, spring.cloud.stream.bindings
+- **Profiles**: default (localhost:9092), docker (my-kafka:9092)
 
-#### Step 2: Kafka Configuration Files
+#### 10. Maven Configuration Generation
+- Refer to "1.3 Maven Dependencies (pom.xml)" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md`
+- File location: `pom.xml`
+- **Required Versions**: Spring Boot 2.3.1.RELEASE, Spring Cloud Hoxton.SR12, Spring Cloud Stream Germantown.SR1
+- **Required Dependencies**: spring-cloud-starter-stream-kafka, spring-boot-starter-data-jpa, H2, Lombok, HATEOAS
 
-- `config/kafka/KafkaProcessor.java`
-  - INPUT = "event-in", OUTPUT = "event-out" constants
-  - Methods with @Input/@Output annotations
+#### 11. Container and Deployment File Generation
+- Refer to "Dockerfile" and "Kubernetes Manifests" sections of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- **File Locations**: 
+  - `Dockerfile`
+  - `kubernetes/deployment.yaml`
+  - `kubernetes/service.yaml`
 
-#### Step 3: Common Infrastructure Files
+#### 12. Common File Generation (Gateway, Kafka)
+- Refer to "Gateway" and "Kafka" sections of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- Check if gateway/, infra/ (kafka - docker-compose.yml) exist at root path
+- If not exist, generate full configuration according to fixed-generation.md
+- If exist, handle gateway application.yml route addition and kafka topic settings
 
-- `infra/AbstractEvent.java`
-  - publish(), publishAfterCommit() methods
-  - BeanUtils.copyProperties logic
-  - TransactionSynchronizationManager utilization
+#### 13. Test Code Generation (Final)
 
-#### Step 4: Domain Files Generation
+**Required**: Test code generation is essential for complete project setup.
 
-**Generation Order (considering dependencies):**
+- Refer to `@.claude/skills/spring-boot-backend-msa/references/test-generation.md`
+- **File Location**: `src/test/java/[projectname]/[ServiceName]Test.java`
+- **Pattern**: JUnit-based Given-When-Then pattern
+- **Scope**: Test all domain logic and event publishing
 
-1. Repository interface (extends JpaRepository)
-2. Domain event classes (extends AbstractEvent)
-3. Aggregate Root entity
-   - @Entity, @Table, @Data annotations
-   - Publish events in @PostPersist/@PostUpdate etc.
-   - static repository() method
-4. Value Objects (if exist)
+#### 14. Testing and Execution (Required)
 
-#### Step 5: Infrastructure Adapters
+**Execution Process:**
 
-- `infra/PolicyHandler.java` (if policies exist)
-  - @StreamListener(KafkaProcessor.INPUT)
-  - Filter with condition = "headers['type']=='EventName'"
-- `infra/[Aggregate]Controller.java` (optional)
-- `infra/[Aggregate]HateoasProcessor.java` (optional)
+1. Maven build and test execution: `mvn clean install`
+2. Validate local execution: `mvn spring-boot:run`
+3. **Required**: Repeat test - error correction process until tests succeed, referring to `@.claude/skills/spring-boot-backend-msa/references/test-generation.md`
 
-#### Step 6: Application Class
+**Key Points:**
+- Do not skip test execution
+- Only correct errors after all files are generated
+- Verify Kafka connection and event publishing
 
-- `[ServiceName]Application.java`
-  - @SpringBootApplication
-  - @EnableBinding(KafkaProcessor.class)
-  - public static ApplicationContext applicationContext
-
-#### Step 7: Configuration Files
-
-- `resources/application.yml`
-  - server.port (unique port per service)
-  - spring.application.name
-  - spring.cloud.stream binding configuration
-  - default profile (brokers: localhost:9092)
-  - docker profile (brokers: my-kafka:9092)
-
-#### Step 8: Maven Configuration
-
-- `pom.xml`
-  - Spring Boot 2.3.1.RELEASE
-  - Spring Cloud Hoxton.SR12
-  - Spring Cloud Stream Germantown.SR1
-  - Required dependencies: spring-cloud-starter-stream-kafka, H2, Lombok, HATEOAS
-
-#### Step 9: Container and Deployment Files
-
-- `Dockerfile`
-- `kubernetes/deployment.yaml`
-- `kubernetes/service.yaml`
-
-#### Step 10: Common Files Generation (Gateway, Kafka)
-
-- Check if gateway/, infra/ (kafka - docker-compose.yml) exist in Root path
-- If not exist, configure files through `@fixed-generation/SKILL.md`
-- If exist, modify gateway application.yml routes and handle kafka processing and topic settings in application.yml referring to `@fixed-generation/SKILL.md`
-
-#### Step 11: Test Code Generation (Final)
-
-- Refer to `@test-generation/SKILL.md`
-- JUnit-based Given-When-Then pattern
-
-#### Step 12: Test and Execution (Mandatory)
-
-- Execute Maven build and tests
-- Verify local execution
-- Must repeat test - error correction process until tests succeed referring to @test-generation/SKILL.md
-
-## Error Correction Rules
-
-- Do not fix errors until all files are generated
-- Be careful not to fall into error correction loops during generation
+### Important Requirements
+- All component generation must be based on metadata. Do not arbitrarily create components by referencing non-existent metadata.
+- Generate components only when required metadata fields exist
+- Adhere to dependency order: Repository → Events → Entities → Infrastructure
+- All files must be generated according to requirements before error correction
