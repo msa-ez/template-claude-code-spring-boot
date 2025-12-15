@@ -129,12 +129,6 @@ public void onPostPersist() {
 @Transactional
 public class PolicyHandler {
 
-    @Autowired
-    DeliveryRepository deliveryRepository;
-
-    @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
-
     @StreamListener(
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='OrderPlaced'"
@@ -166,11 +160,11 @@ Important: Store ApplicationContext statically to enable Bean access from Abstra
 ```
 @SpringBootApplication
 @EnableBinding(KafkaProcessor.class)
-public class OrderApplication {
+public class GatewayApplication {
     public static ApplicationContext applicationContext;
 
     public static void main(String[] args) {
-        applicationContext = SpringApplication.run(OrderApplication.class, args);
+        applicationContext = SpringApplication.run(GatewayApplication.class, args);
     }
 }
 ```

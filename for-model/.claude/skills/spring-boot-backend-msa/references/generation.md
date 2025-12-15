@@ -12,11 +12,11 @@ Projects must be created strictly following the numbered order below.
 - Refer to the "3. Project Structure" section of `@.claude/skills/spring-boot-backend-msa/references/architecture.md` to correct missing package structure
 
 #### 2. Kafka Infrastructure Setup (Required Prerequisite)
-- Generate by referring to the Kafka part of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- Generate Kafka infrastructure using the ddd-msa-infra-architect agent
 
 #### 3. Gateway Setup
-- If there's no gateway directory at root, generate by referring to the Gateway part of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
-- If it already exists, add routes to application.yml
+- Generate API Gateway configuration using the ddd-msa-infra-architect agent
+- If gateway already exists, the agent will add routes to application.yml only
 
 #### 4. Kafka Configuration Component Generation
 - Refer to "1. KafkaProcessor Interface Definition" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
@@ -27,7 +27,9 @@ Projects must be created strictly following the numbered order below.
 - Generate `infra/AbstractEvent.java` (includes publish(), publishAfterCommit() methods)
 
 #### 6. Domain Component Generation
+
 **Required**: All Aggregates in the metadata must be generated without omission.
+
 **Generation Order (Considering Dependencies):**
 
 ##### 6.1 Repository Interface Generation
@@ -86,7 +88,7 @@ Projects must be created strictly following the numbered order below.
 
 ##### 9.1 Application Configuration
 - Refer to "6. application.yml Configuration" section of `@.claude/skills/spring-boot-backend-msa/references/domain-events.md`
-- Refer to application.yml example in `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- Generate service application configuration using the ddd-msa-infra-architect agent
 - File location: `resources/application.yml`
 - **Required Configuration**: server.port (unique), spring.application.name, spring.cloud.stream.bindings
 - **Profiles**: default (localhost:9092), docker (my-kafka:9092)
@@ -98,39 +100,24 @@ Projects must be created strictly following the numbered order below.
 - **Required Dependencies**: spring-cloud-starter-stream-kafka, spring-boot-starter-data-jpa, H2, Lombok, HATEOAS
 
 #### 11. Container and Deployment File Generation
-- Refer to "Dockerfile" and "Kubernetes Manifests" sections of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
+- Generate Dockerfile and Kubernetes manifests using the ddd-msa-infra-architect agent
 - **File Locations**: 
   - `Dockerfile`
   - `kubernetes/deployment.yaml`
   - `kubernetes/service.yaml`
 
 #### 12. Common File Generation (Gateway, Kafka)
-- Refer to "Gateway" and "Kafka" sections of `@.claude/skills/spring-boot-backend-msa/references/fixed-generation.md`
-- Check if gateway/, infra/ (kafka - docker-compose.yml) exist at root path
-- If not exist, generate full configuration according to fixed-generation.md
+- Generate shared infrastructure using the ddd-msa-infra-architect agent
+- The agent will check if gateway/, infra/ (kafka - docker-compose.yml) exist at root path
+- If not exist, generate full configuration
 - If exist, handle gateway application.yml route addition and kafka topic settings
 
-#### 13. Test Code Generation (Final)
-
-**Required**: Test code generation is essential for complete project setup.
-
-- Refer to `@.claude/skills/spring-boot-backend-msa/references/test-generation.md`
-- **File Location**: `src/test/java/[projectname]/[ServiceName]Test.java`
-- **Pattern**: JUnit-based Given-When-Then pattern
-- **Scope**: Test all domain logic and event publishing
-
-#### 14. Testing and Execution (Required)
-
-**Execution Process:**
-
-1. Maven build and test execution: `mvn clean install`
-2. Validate local execution: `mvn spring-boot:run`
-3. **Required**: Repeat test - error correction process until tests succeed, referring to `@.claude/skills/spring-boot-backend-msa/references/test-generation.md`
-
-**Key Points:**
-- Do not skip test execution
-- Only correct errors after all files are generated
-- Verify Kafka connection and event publishing
+#### 13. Test Code Generation, Testing and Execution (Final)
+- Generate JUnit tests using the prd-junit-test-generator agent, which specializes in the Given-When-Then testing pattern
+- Test all domain logic and event publishing
+- Maven build and test execution: `mvn clean install`
+- Validate local execution: `mvn spring-boot:run`
+- Repeat test - error correction process until tests succeed
 
 ### Important Requirements
 - All component generation must be based on metadata. Do not arbitrarily create components by referencing non-existent metadata.
