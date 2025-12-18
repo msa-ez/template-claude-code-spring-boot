@@ -1,6 +1,6 @@
 fileName: PRD.txt
 except: {{#compareName name}}{{/compareName}}
-path:{{name}}/PRD
+path: {{name}}/PRD
 ---
 Please implement Spring Boot-based DDD microservice architecture code based on the metadata provided below. For detailed instructions on code generation, please refer to @.claude/skills/spring-boot-backend-msa/SKILL.md:
 
