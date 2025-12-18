@@ -33,23 +33,15 @@ Before starting any code generation work, you must **read the following file fir
    - Description: Domain event publishing and handling rules
    - Path: @.claude/skills/spring-boot-backend-msa/references/domain-events.md
 
-3. **EventStorming Reference**
-   - Description: Event Storming sticker-based design rules
-   - Path: @.claude/skills/spring-boot-backend-msa/references/eventstorming.md
+3. **Architecture Reference**
+   - Description: Event Storming sticker-based design rules, package structure organization, and technical stack guidelines
+   - Path: @.claude/skills/spring-boot-backend-msa/references/architecture.md
 
 4. **Fixed Generation Reference**
    - Description: Infrastructure configuration for DDD-based microservices
    - Instructions: Use the ddd-msa-infra-architect agent to create Dockerfile, Kubernetes manifests, API Gateway, and Kafka infrastructure
 
-5. **Package Structure Reference**
-   - Description: Backend project package structure and organization rules
-   - Path: @.claude/skills/spring-boot-backend-msa/references/package-structure.md
-
-6. **Technical Stack Reference**
-   - Description: Backend technology stack and framework usage guidelines
-   - Path: @.claude/skills/spring-boot-backend-msa/references/technical-stack.md
-
-7. **Test Generation Reference**
+5. **Test Generation Reference**
    - Description: Backend test code generation rules
    - Instructions: Use the prd-junit-test-generator agent to create JUnit tests following the Given-When-Then pattern
 
