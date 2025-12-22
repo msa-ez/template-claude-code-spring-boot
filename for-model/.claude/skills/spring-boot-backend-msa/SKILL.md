@@ -1,8 +1,10 @@
 ---
 
+
 name: Backend Generation Guide
 description: Integrated guidelines for Spring Boot-based MSA backend code generation
 ---
+
 
 
 # Backend Project Generation Guideline
@@ -39,11 +41,11 @@ Before starting any code generation work, you must **read the following file fir
 
 4. **Fixed Generation Reference**
    - Description: Infrastructure configuration for DDD-based microservices
-   - Instructions: Use the ddd-msa-infra-architect agent to create Dockerfile, Kubernetes manifests, API Gateway, and Kafka infrastructure
+   - Instructions: Use the infra-architect agent to create Dockerfile, Kubernetes manifests, API Gateway, and Kafka infrastructure
 
 5. **Test Generation Reference**
    - Description: Backend test code generation rules
-   - Instructions: Use the prd-junit-test-generator agent to create JUnit tests following the Given-When-Then pattern
+   - Instructions: Use the test-generator agent to create JUnit tests following the Given-When-Then pattern
 
 ## Important Notes
 - **Generation Reference Always Has Priority**: Must be read before all other references
